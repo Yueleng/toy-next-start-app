@@ -5,11 +5,11 @@ export default function Home() {
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
         <Image
-          className="dark:invert"
-          src="/next.svg"
+          // className="dark:invert"
+          src="https://media.gettyimages.com/id/2250177045/photo/gifts-in-clouds.jpg?s=2048x2048&w=gi&k=20&c=ppjdiCsnmrcuNs63HdbyTquOsv2T_iUdnGw_rjOy9Qo="
           alt="Next.js logo"
-          width={100}
-          height={20}
+          width={400}
+          height={80}
           priority
         />
         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
