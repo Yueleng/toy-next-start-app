@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 
 type UserDetail = {
   id: number;
@@ -36,7 +36,7 @@ export default function UserDetailPage() {
   const [detail, setDetail] = useState<UserDetail | null>(null);
 
   useEffect(() => {
-    if (selectedId === null) return;
+    if (selectedId === null || Number.isNaN(selectedId)) return;
 
     const controller = new AbortController();
     const loadDetail = async () => {
@@ -71,37 +71,42 @@ export default function UserDetailPage() {
   return (
     <div className="min-h-screen bg-white px-6 py-10">
       <main className="mx-auto flex max-w-5xl flex-col gap-6">
-        {!selectedId && <p>Select a user to see details.</p>}
-        {loading && <p>Loading user...</p>}
-        {error && <p className="text-red-600">Error: {error}</p>}
-        {detail && (
-          <div className="space-y-4">
-            <h2 className="text-2xl font-semibold">{detail.name}</h2>
-            <p>
-              <strong>Username:</strong> {detail.username}
-            </p>
-            <p>
-              <strong>Email:</strong> {detail.email}
-            </p>
-            <p>
-              <strong>Phone:</strong> {detail.phone}
-            </p>
-            <p>
-              <strong>Website:</strong> {detail.website}
-            </p>
-            <div>
-              <strong>Address:</strong>
-              <p>
-                {detail.address.suite}, {detail.address.street},{" "}
-                {detail.address.city}, {detail.address.zipcode}
-              </p>
-            </div>
-            <div>
-              <strong>Company:</strong>
-              <p>{detail.company.name}</p>
-              <p className="italic">{detail.company.catchPhrase}</p>
-            </div>
-          </div>
+        {Number.isNaN(selectedId) || error ? (
+          notFound()
+        ) : (
+          <>
+            {!selectedId && <p>Select a user to see details.</p>}
+            {loading && <p>Loading user...</p>}
+            {detail && (
+              <div className="space-y-4">
+                <h2 className="text-2xl font-semibold">{detail.name}</h2>
+                <p>
+                  <strong>Username:</strong> {detail.username}
+                </p>
+                <p>
+                  <strong>Email:</strong> {detail.email}
+                </p>
+                <p>
+                  <strong>Phone:</strong> {detail.phone}
+                </p>
+                <p>
+                  <strong>Website:</strong> {detail.website}
+                </p>
+                <div>
+                  <strong>Address:</strong>
+                  <p>
+                    {detail.address.suite}, {detail.address.street},{" "}
+                    {detail.address.city}, {detail.address.zipcode}
+                  </p>
+                </div>
+                <div>
+                  <strong>Company:</strong>
+                  <p>{detail.company.name}</p>
+                  <p className="italic">{detail.company.catchPhrase}</p>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </main>
     </div>
