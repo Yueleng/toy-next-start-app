@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import Image from "next/image";
+
+export const metadata: Metadata = {
+  title: "Welcome",
+  description:
+    "Landing page for the Cumulus Studio demo with quick links to deploy and learn Next.js.",
+};
 
 export default function Home() {
   return (

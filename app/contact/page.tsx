@@ -1,5 +1,18 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import ContactButton from "./button";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description:
+    "Get in touch for product strategy, UI/UX, engineering, and support. Browse recent client chatter and reach the team quickly.",
+  openGraph: {
+    title: "Contact the Cumulus Studio team",
+    description:
+      "Reach out for collaborations, projects, and support with a fast response time.",
+    url: "/contact",
+  },
+};
 
 async function makePostRequest() {
   const host = (await headers()).get("host") ?? "localhost:3000";
