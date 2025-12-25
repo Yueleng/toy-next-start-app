@@ -1,4 +1,27 @@
+import { headers } from "next/headers";
 import ContactButton from "./button";
+
+async function makePostRequest() {
+  const host = (await headers()).get("host") ?? "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? `${protocol}://${host}`;
+
+  const response = await fetch(`${baseUrl}/api/hello`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ message: "Hello from client!" }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`POST /api/hello failed: ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  return { data };
+}
 
 export default async function DummyList() {
   const listOfDummys: {
@@ -9,6 +32,9 @@ export default async function DummyList() {
   }[] = await fetch("https://jsonplaceholder.typicode.com/posts").then((res) =>
     res.json()
   );
+
+  const { data } = await makePostRequest();
+  console.log("Response from /api/hello:", data);
 
   return (
     <div className="min-h-screen bg-linear-to-b from-sky-50 via-white to-indigo-50">
@@ -111,6 +137,7 @@ export default async function DummyList() {
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-slate-600">
                   {dummy.body}
+                  {data.received.message}
                 </p>
               </article>
             ))}
