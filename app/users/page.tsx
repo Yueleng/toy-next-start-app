@@ -16,7 +16,7 @@ export default async function UsersPage() {
           </p>
         </header>
         <UserExplorer users={users}>
-          <UserDetailCard params={{ userId: "1" }} />
+          <UserDetailCard />
         </UserExplorer>
       </main>
     </div>

@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-type Props = {
-  params: { userId: string };
-};
+import { useParams } from "next/navigation";
 
 type UserDetail = {
   id: number;
@@ -30,9 +27,9 @@ type UserDetail = {
   };
 };
 
-export default function UserDetailPage({ params }: Props) {
-  console.log("UserDetailPage params:", params);
-  const selectedId = parseInt(params.userId, 10);
+export default function UserDetailPage() {
+  const params = useParams<{ userId: string }>();
+  const selectedId = params?.userId ? Number(params.userId) : null;
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -74,13 +71,6 @@ export default function UserDetailPage({ params }: Props) {
   return (
     <div className="min-h-screen bg-white px-6 py-10">
       <main className="mx-auto flex max-w-5xl flex-col gap-6">
-        <header className="space-y-2">
-          <h1 className="text-3xl font-bold">Users</h1>
-          <p className="text-gray-700">
-            Fetched from jsonplaceholder and loaded on demand when you click a
-            name.
-          </p>
-        </header>
         {!selectedId && <p>Select a user to see details.</p>}
         {loading && <p>Loading user...</p>}
         {error && <p className="text-red-600">Error: {error}</p>}
