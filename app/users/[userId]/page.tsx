@@ -1,7 +1,4 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { notFound, useParams } from "next/navigation";
+import { notFound } from "next/navigation";
 
 type UserDetail = {
   id: number;
@@ -27,56 +24,47 @@ type UserDetail = {
   };
 };
 
-export default function UserDetailPage() {
-  const params = useParams<{ userId: string }>();
-  const selectedId = params?.userId ? Number(params.userId) : null;
+export default async function UserDetailPage({
+  params,
+}: {
+  params?: Promise<{ userId: string }>;
+}) {
+  const { userId } = (await params) || { userId: null };
+  // if userId is not a number, then selectedId is NaN
+  // if userId is null then selectedId is null and Number(null) is 0
+  const selectedId = userId ? Number(userId) : null;
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [detail, setDetail] = useState<UserDetail | null>(null);
+  console.log("Selected userId:", selectedId);
 
-  useEffect(() => {
-    if (selectedId === null || Number.isNaN(selectedId)) return;
+  if (Number.isNaN(selectedId)) {
+    return notFound();
+  }
 
-    const controller = new AbortController();
-    const loadDetail = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await fetch(
-          `https://jsonplaceholder.typicode.com/users/${selectedId}`,
-          { signal: controller.signal }
-        );
+  let detail: UserDetail | null = null;
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch user detail");
-        }
+  if (selectedId) {
+    try {
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/users/${selectedId}`
+      );
 
-        const data: UserDetail = await response.json();
-        setDetail(data);
-      } catch (err) {
-        if ((err as Error).name === "AbortError") return;
-        setError((err as Error).message);
-        setDetail(null);
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error("Failed to fetch user detail");
       }
-    };
 
-    loadDetail();
-
-    return () => controller.abort();
-  }, [selectedId]);
+      detail = await response.json();
+    } catch (err) {
+      console.error(err);
+      return notFound();
+    }
+  }
 
   return (
     <div className="min-h-screen bg-white px-6 py-10">
       <main className="mx-auto flex max-w-5xl flex-col gap-6">
-        {Number.isNaN(selectedId) || error ? (
-          notFound()
-        ) : (
+        {!selectedId && <p>Select a user to see details.</p>}
+        {detail && (
           <>
-            {!selectedId && <p>Select a user to see details.</p>}
-            {loading && <p>Loading user...</p>}
             {detail && (
               <div className="space-y-4">
                 <h2 className="text-2xl font-semibold">{detail.name}</h2>
