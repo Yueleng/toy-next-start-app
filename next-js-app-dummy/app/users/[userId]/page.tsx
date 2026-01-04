@@ -34,8 +34,6 @@ export default async function UserDetailPage({
   // if userId is null then selectedId is null and Number(null) is 0
   const selectedId = userId ? Number(userId) : null;
 
-  console.log("Selected userId:", selectedId);
-
   if (Number.isNaN(selectedId)) {
     return notFound();
   }
